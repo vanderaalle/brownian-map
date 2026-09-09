@@ -1,28 +1,22 @@
 # brownian-map
 
-![Example generated map](docs/hero.png)
-
-*500x500, three overlaid seed walks (`surface.generate_multi_spark_surface`,
-`n_walks=3`), with isocurves — see below for the exact call.*
+![Example generated map](docs/map.png)
 
 Procedural map generation from 2D Brownian-style random surfaces: seed a
 grid with a random walk, fill it in by neighbour-averaging plus jitter, map
 the result through a bathymetric/hypsometric colour ramp, clean up speckle
 noise, and trace elevation contours.
 
+The map above is the default pipeline at `--dim 300 --seed 0`, i.e. the
+output of section 7 of the notebook:
+
 ```python
-import random
-from brownian_map import surface, palette, postprocess, render
+from brownian_map.cli import generate_map
+from brownian_map import render
 
-random.seed(1)
-srf = surface.generate_multi_spark_surface(500, n_walks=3, sparks=150, step=0.12)
-norm = palette.normalize_surface(srf, n_bins=20)
-clean = postprocess.clean_isolated_points(norm)
-iso = postprocess.compute_isocurves(clean, n_levels=28)
-render.render_surface(clean, palette.load_palette(), isocurves=iso, path="map.png")
+clean, rgb_palette, isocurves = generate_map(dim=300, sparks=100, step=0.1, n_bins=20, seed=0)
+render.render_surface(clean, rgb_palette, isocurves=isocurves, path="docs/map.png")
 ```
-
-That's the exact call behind the image above.
 
 ## Install
 
@@ -49,6 +43,17 @@ palette normalization, speckle cleanup, isocurves) in isolation, then runs
 the same thing end-to-end via `cli.generate_map`. Start with its parameter
 glossary for what each argument controls.
 
+Two things worth knowing, both covered there in more detail:
+
+- **`step` is the land-fraction knob.** Higher jitter means rougher terrain
+  *and* more land above sea level; the archipelago look above comes from
+  keeping it low (`0.1`).
+- **A single seed walk gives one basin.** On grids much larger than the
+  walk itself, the whole map becomes one basin radiating from it — a visible
+  "starburst". `surface.generate_multi_spark_surface` overlays several
+  independent walks (cell-wise max) to break that up, at the cost of
+  raising land coverage.
+
 ## Layout
 
 | Module | Role |
@@ -56,6 +61,6 @@ glossary for what each argument controls.
 | `brownian_map/surface.py` | Raw heightmap generation (row-based and spark-propagation). |
 | `brownian_map/palette.py` | Colour ramp loading and surface quantization. |
 | `brownian_map/postprocess.py` | Speckle cleanup, isocurve extraction. |
-| `brownian_map/rivers.py` | Hill-climbing river tracing, used by `cli.generate_map` internally. Short, unconvincing paths are a known limitation — see its module docstring. |
 | `brownian_map/render.py` | Matplotlib rendering. |
 | `brownian_map/cli.py` | End-to-end pipeline + `python -m brownian_map.cli` entry point. |
+| `brownian_map/rivers.py` | Hill-climbing river tracing. Not part of the pipeline — short, unconvincing paths are an inherent limit of hill-climbing over a static surface. Kept for reference; see its module docstring for a sketch of an erosion-based alternative. |

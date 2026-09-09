@@ -2,11 +2,12 @@
 
 Pipeline: a `surface` (array of floats in [-1, 1]) is generated, then
 `normalize_surface` maps it to palette indices, `clean_isolated_points`
-removes single-cell noise, `compute_isocurves` extracts elevation contour
-lines, and `generate_rivers` traces hill-climbing paths across it. `render`
-draws the result.
+removes single-cell noise, and `compute_isocurves` extracts elevation
+contour lines. `render` draws the result.
 
-    from brownian_map import surface, palette, postprocess, rivers, render
+`rivers` is not part of that pipeline — see its module docstring.
+
+    from brownian_map import surface, palette, postprocess, render
 
     srf = surface.generate_brownian_spark_surface(dim=300, sparks=100)
     norm = palette.normalize_surface(srf)
