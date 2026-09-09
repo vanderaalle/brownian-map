@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brownian-map"
+version = "0.1.0"
+description = "Procedural map generation from 2D Brownian-style random surfaces"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scikit-image",
+]
+
+[project.optional-dependencies]
+notebook = ["jupyter", "ipykernel"]
+
+[project.scripts]
+brownian-map = "brownian_map.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["brownian_map*"]
+
+[tool.setuptools.package-data]
+brownian_map = ["wiki-2.0.gpf"]

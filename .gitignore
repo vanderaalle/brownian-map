@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.png
+*.pdf
+*.egg-info/
+build/
+dist/
