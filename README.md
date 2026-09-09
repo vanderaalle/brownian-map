@@ -1,17 +1,28 @@
 # brownian-map
 
+![Example generated map](docs/hero.png)
+
+*500x500, three overlaid seed walks (`surface.generate_multi_spark_surface`,
+`n_walks=3`), with isocurves — see below for the exact call.*
+
 Procedural map generation from 2D Brownian-style random surfaces: seed a
 grid with a random walk, fill it in by neighbour-averaging plus jitter, map
 the result through a bathymetric/hypsometric colour ramp, clean up speckle
 noise, and trace elevation contours.
 
+```python
+import random
+from brownian_map import surface, palette, postprocess, render
+
+random.seed(1)
+srf = surface.generate_multi_spark_surface(500, n_walks=3, sparks=150, step=0.12)
+norm = palette.normalize_surface(srf, n_bins=20)
+clean = postprocess.clean_isolated_points(norm)
+iso = postprocess.compute_isocurves(clean, n_levels=28)
+render.render_surface(clean, palette.load_palette(), isocurves=iso, path="map.png")
 ```
-srf = generate_brownian_spark_surface(dim=300, sparks=100)
-norm = normalize_surface(srf)
-clean = clean_isolated_points(norm)
-iso = compute_isocurves(clean)
-render_surface(clean, load_palette(), isocurves=iso, path="map.png")
-```
+
+That's the exact call behind the image above.
 
 ## Install
 
