@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import numpy as np
+from matplotlib.colors import hsv_to_rgb
 
 # A 29-colour bathymetric/hypsometric ramp (deep sea -> land -> peaks), from
 # http://soliton.vm.bytemark.co.uk/pub/cpt-city/wkp/template/wiki-2.0.qgs
@@ -22,6 +23,20 @@ def load_palette(path: Path | str = DEFAULT_PALETTE_PATH) -> np.ndarray:
 def interpolate_rgb(color_a, color_b, t: float = 0.5) -> list[float]:
     """Blend two RGB colours; `t=0` returns `color_a`, `t=1` returns `color_b`."""
     return [a - (a - b) * t for a, b in zip(color_a, color_b)]
+
+
+def generate_hue_wheel_palette(n: int, saturation: float = 0.85, value: float = 0.9) -> np.ndarray:
+    """A deliberately *non*-cartographic control palette: elevation mapped
+    straight onto hue (0..360 degrees), at constant saturation/value. Full,
+    vivid colour throughout -- unlike `load_palette`'s hypsometric ramp,
+    there's no low-to-high visual ordering to it, so it's a sharper "is it
+    really the palette convention doing the work" control than a grayscale
+    ramp: grayscale also removes colour entirely, which confounds the
+    comparison; this keeps colour but removes the *hypsometric structure*,
+    isolating that as the actual variable."""
+    hue = np.linspace(0, 1, n, endpoint=False)
+    hsv = np.stack([hue, np.full(n, saturation), np.full(n, value)], axis=1)
+    return hsv_to_rgb(hsv)
 
 
 def normalize_surface(surface: np.ndarray, n_bins: int = 20, low_bins: int = 10) -> np.ndarray:
