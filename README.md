@@ -47,10 +47,11 @@ before touching the notebook or the code.
 
 ## Notebook
 
-`notebook.ipynb` walks through each pipeline stage (surface generation,
-palette normalization, speckle cleanup, isocurves) in isolation, then runs
-the same thing end-to-end via `cli.generate_map`. Start with its parameter
-glossary for what each argument controls.
+[`spark-fill-notebook.ipynb`](spark-fill-notebook.ipynb) walks through each
+pipeline stage (surface generation, palette normalization, speckle cleanup,
+isocurves) in isolation, then runs the same thing end-to-end via
+`cli.generate_map`. Start with its parameter glossary for what each
+argument controls.
 
 Two things worth knowing, both covered there in more detail:
 
