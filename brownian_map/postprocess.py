@@ -44,9 +44,23 @@ def compute_isocurves(
 
     Each contour is an `(n, 2)` array of `(row, col)` float coordinates, as
     returned by `skimage.measure.find_contours`.
-    """
+
+    Traces at `level - 0.5`, not `level` itself. `normalized_surface` holds
+    only integers (palette indices), so asking `find_contours` for a level
+    that exactly equals real data values hits marching squares' documented
+    degenerate case for ambiguous/exactly-matching corners -- in practice
+    this silently drops isolated same-valued regions rather than raising,
+    worst for small, high-value blobs (mountain peaks) surrounded on all
+    sides by lower ground: e.g. on one 150x150 test surface, level 16 has
+    10 real connected components (`skimage.measure.label`) but the old
+    `find_contours(surface, level)` traced only 1 of them, and level 17's
+    single remaining peak wasn't traced at all. `level - 0.5` always falls
+    strictly between two integers, so it can never exactly equal a corner
+    value -- every connected component of cells `>= level` gets a clean,
+    unambiguous boundary, matching `skimage.measure.label`'s component
+    count instead of silently missing most of them."""
     return [
-        measure.find_contours(normalized_surface, level) for level in range(n_levels)
+        measure.find_contours(normalized_surface, level - 0.5) for level in range(n_levels)
     ]
 
 

@@ -36,6 +36,15 @@ python -m brownian_map.cli --dim 300 --sparks 100 --out map.png
 or, after installing, the `brownian-map` console script does the same
 thing. See `python -m brownian_map.cli --help` for all options.
 
+## Algorithm walkthrough
+
+[`docs/spark-fill-algorithm.html`](docs/spark-fill-algorithm.html) is an
+illustrated, step-by-step tutorial of the whole pipeline above — one random
+walk, grown into a basin, combined with others, quantized, cleaned,
+contoured, and rendered — each step with its own figure, no setup required
+beyond opening the file. Start here if you want to understand the algorithm
+before touching the notebook or the code.
+
 ## Notebook
 
 `notebook.ipynb` walks through each pipeline stage (surface generation,
