@@ -38,11 +38,14 @@ thing. See `python -m brownian_map.cli --help` for all options.
 
 ## Algorithm walkthrough
 
-[`docs/spark-fill-algorithm.html`](docs/spark-fill-algorithm.html) is an
-illustrated, step-by-step tutorial of the whole pipeline above — one random
-walk, grown into a basin, combined with others, quantized, cleaned,
-contoured, and rendered — each step with its own figure, no setup required
-beyond opening the file. Start here if you want to understand the algorithm
+**[Live tutorial](https://vanderaalle.github.io/brownian-map/spark-fill-algorithm.html)**
+(source: [`docs/spark-fill-algorithm.html`](docs/spark-fill-algorithm.html),
+which GitHub's own file viewer shows as source, not rendered — use the live
+link above to actually read it) is an illustrated, step-by-step tutorial of
+the whole pipeline above — one random walk, grown into a basin, combined
+with others, quantized, cleaned, contoured, and rendered — each step with
+its own figure, no setup required beyond opening the link. Start here if
+you want to understand the algorithm
 before touching the notebook or the code.
 
 ## Notebook
